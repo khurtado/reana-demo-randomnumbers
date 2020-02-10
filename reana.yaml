@@ -1,0 +1,17 @@
+version: 0.5.0
+inputs:
+  files:
+    - code/generator.py
+  parameters:
+    sleeptime: 1.0
+    generator: code/generator.py
+    maxlimit: 100
+    #rseed: 1
+    rseed: [1,2,3,4]
+workflow:
+  type: yadage
+  #file: workflow_single.yaml
+  file: workflow_multi.yaml
+#outputs:
+#  files:
+#    - randomnumber.txt

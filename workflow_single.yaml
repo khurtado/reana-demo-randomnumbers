@@ -1,0 +1,27 @@
+stages:
+  - name: generate
+    dependencies: [init]
+    scheduler:
+      scheduler_type: 'singlestep-stage'
+      parameters:
+        generator: {stages: init, output: generator, unwrap: true}
+        sleeptime: {stages: init, output: sleeptime, unwrap: true}
+        maxlimit: {stages: init, output: maxlimit, unwrap: true}
+        rseed: {stages: init, output: rseed, unwrap: true}
+        outputfile: '{workdir}/randomnumber.txt'
+      step:
+        process: 
+          process_type: 'string-interpolated-cmd'
+          #interpreter: bash
+          cmd: 'python "{generator}" --sleeptime {sleeptime} --seed {rseed} --maxlimit {maxlimit} --outputfile "{outputfile}"'
+        publisher:
+          publisher_type: 'frompar-pub'
+          outputmap:
+            outputfile: 'outputfile'
+        environment:
+          environment_type: docker-encapsulated
+          image: 'python'
+          imagetag: '2.7-slim'
+      scatter:
+        method: zip
+        parameters: [rseed]
